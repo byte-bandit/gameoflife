@@ -1,14 +1,51 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+
+SDL_Surface *screen;
+SDL_Surface *i_0;
+SDL_Surface *i_1;
+
+void drawPic(SDL_Surface *surface, int x, int y);
+
+void drawPic(SDL_Surface *surface, int x, int y)
+{
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = surface -> w;
+	rect.h = surface -> h;
+
+	SDL_BlitSurface(surface, NULL, screen, &rect);
+}
 
 int main(int argc, char* argv[])
 {
 
-	int intWorldSize = 16;
+	int intWorldSize = 32;
 	int world[intWorldSize][intWorldSize];
+	int tilesize = 12;
 
+	i_0 = IMG_Load("0.png");
+	i_1 = IMG_Load("1.png");
+
+	SDL_Event event;
+	
+	if (SDL_Init(SDL_INIT_VIDEO) == -1)
+	{
+		printf("Can't into SDL");
+		exit(1);
+	}
+
+	atexit(SDL_Quit);
+	screen = SDL_SetVideoMode(640,480, 16, SDL_HWSURFACE);
+	if (screen == NULL)
+	{
+		printf("Can't into video mode.");
+		exit(1);
+	}
 
 	//Initialize the world
 	int i,j;
@@ -16,25 +53,27 @@ int main(int argc, char* argv[])
 	{
 		for(j=0; j < intWorldSize; j++)
 		{
-			if (i+j % 3 == 0)
+			world[i][j] = 0;
+			if ((i+j) % 3 == 0)
 			{
 				world[i][j] = 1;
 			}
-			//world[i][j] = 0;
 		}
 	}
 
-	/*world[4][4] = 1;
+	world[4][4] = 1;
 	world[5][4] = 1;
 	world[6][4] = 1;
 	world[6][3] = 1;
-	*/
 	world[5][2] = 1;
+
 	//Game loop
 	int quit = 0;
+	int gen = 0;
 	while (quit == 0)
 	{
-		usleep(50000);
+		usleep(100000);
+		gen ++;
 
 		//Calculate next step
 		int newWorld[intWorldSize][intWorldSize];
@@ -171,7 +210,7 @@ int main(int argc, char* argv[])
 		}
 
 		//CLS
-		system("clear");
+		//system("clear");
 
 		// Redraw world
 		for(x=0; x < intWorldSize; x++)
@@ -180,16 +219,30 @@ int main(int argc, char* argv[])
 			{
 				if (world[x][y] == 1)
 				{
-					printf("x");
+					//printf("x");
+					drawPic(i_1, x * tilesize, y * tilesize);
 				}
 				else
 				{
-					printf(" ");
+					//printf("_");
+					drawPic(i_0, x * tilesize, y * tilesize);
 				}
 			}
-			printf("\n");
+			//printf("\n");
 		}
+		printf("\n%i. Generation\n", gen);
 
+		SDL_Flip(screen);
+
+		while(SDL_PollEvent (&event))
+		{
+			switch(event.type)
+			{
+				case SDL_QUIT:
+					quit = 1;
+					break;
+			}
+		}
 		
 	}
 }
