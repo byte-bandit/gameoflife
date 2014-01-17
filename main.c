@@ -103,11 +103,47 @@ int main(int argc, char* argv[])
 						livingNext ++;
 					}
 				}
+				else
+				{
+					int newx, newy;
+					newx = x;
+					newy = y;
+					if(x == 0)
+					{
+						newx = intWorldSize;
+					}
+					if(y == 0)
+					{
+						newy = intWorldSize;
+					}
+					if (world[newx][newy] == 1)
+					{
+						livingNext ++;
+					}
+				}
 
 				//U
 				if (y != 0)
 				{
 					if (world[x][y-1] == 1)
+					{
+						livingNext ++;
+					}
+				}
+				else
+				{
+					int newx, newy;
+					newx = x;
+					newy = y;
+					if(x == 0)
+					{
+						newx = intWorldSize;
+					}
+					if(y == 0)
+					{
+						newy = intWorldSize;
+					}
+					if (world[newx][newy] == 1)
 					{
 						livingNext ++;
 					}
@@ -121,6 +157,25 @@ int main(int argc, char* argv[])
 						livingNext ++;
 					}
 				}
+				else
+				{
+					int newx, newy;
+					newx = x;
+					newy = y;
+					if(x == 0)
+					{
+						newx = intWorldSize;
+					}
+					if(y == 0)
+					{
+						newy = intWorldSize;
+					}
+					if (world[newx][newy] == 1)
+					{
+						livingNext ++;
+					}
+				}
+
 
 				//L
 				if (x != 0)
